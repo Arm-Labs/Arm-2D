@@ -414,7 +414,8 @@ arm_fsm_rt_t __arm_2d_issue_sub_task_copy_with_mask(
             },
         },
     };
-    
+
+#if 0
     if (NULL == ptSourceMask){
         ptTask->Param.tCopyMask.tSrcMask.bInvalid = true;
     } else {
@@ -426,6 +427,11 @@ arm_fsm_rt_t __arm_2d_issue_sub_task_copy_with_mask(
     } else {
         ptTask->Param.tCopyMask.tDesMask = *ptTargetMask;
     }
+#else
+    /* inject fault */
+    ptTask->Param.tCopyMask.tSrcMask = *ptSourceMask;
+    ptTask->Param.tCopyMask.tDesMask = *ptTargetMask;
+#endif
     
     /* call default software implementation */
     ARM_2D_RUN_DEFAULT(0,__arm_2d_io_func_t );
