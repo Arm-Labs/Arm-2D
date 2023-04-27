@@ -76,7 +76,7 @@ jobs:
           . <(curl https://aka.ms/vcpkg-init.sh -L)
           vcpkg activate
 
-          cpackget add --agree-embedded-license https://github.com/GorgonMeducer/perf_counter/raw/main/cmsis-pack/GorgonMeducer.perf_counter.1.9.11.pack
+          cpackget add --agree-embedded-license https://github.com/GorgonMeducer/perf_counter/raw/main/cmsis-pack/GorgonMeducer.perf_counter.1.9.10.pack
 
           echo "cpackget : $(which cpackget)"
           echo "csolution: $(which csolution)"
