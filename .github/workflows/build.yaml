@@ -7,6 +7,15 @@ on:
     branches: [ main, developing ]
   release:
     types: [published]
+
+
+env:
+  ARMLMD_LICENSE_FILE: /opt/data.dat
+  ARM_TOOL_VARIANT: ult
+  AC6_TOOLCHAIN_6_18_0: /opt/armcompiler/bin
+  LD_LIBRARY_PATH: /opt/VHT
+  AVH_PATH: /opt/VHT
+
 jobs:
   # pack:
   #   name: Generate pack
@@ -53,22 +62,29 @@ jobs:
         run: |
           pip install -U -r test/requirements.txt
 
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
-        with:
-          languages: cpp
-          queries: security-and-quality
+      # - name: Initialize CodeQL
+      #   uses: github/codeql-action/init@v2
+      #   with:
+      #     languages: cpp
+      #     queries: security-and-quality
 
-      - name: test cmsis toolbox
+      - name: misc
 #          # cbuild get_started.csolution.yml --packs --update-rte --configuration .debug+AVH      
         run: |
+          ./tool-inventory.sh
+          . <(curl https://aka.ms/vcpkg-init.sh -L)
+          vcpkg activate
+
+
           echo "cpackget : $(which cpackget)"
           echo "csolution: $(which csolution)"
           echo "cbuild   : $(which cbuild)"
           echo "cbuild   : $(which armclang)"
 
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
+          env
+
+      #- name: Perform CodeQL Analysis
+      #  uses: github/codeql-action/analyze@v2
 
       #- name: Run the example
       #  run: |
