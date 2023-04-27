@@ -76,11 +76,17 @@ jobs:
           . <(curl https://aka.ms/vcpkg-init.sh -L)
           vcpkg activate
 
-          cpackget add --agree-embedded-license https://github.com/GorgonMeducer/perf_counter/raw/main/cmsis-pack/GorgonMeducer.perf_counter.1.9.10.pack
+      
 
           echo "cpackget : $(which cpackget)"
           echo "csolution: $(which csolution)"
           echo "cbuild   : $(which cbuild)"
+
+          cpackget update-index
+          cpackget add --agree-embedded-license https://github.com/GorgonMeducer/perf_counter/raw/main/cmsis-pack/GorgonMeducer.perf_counter.1.9.10.pack
+
+          csolution list packs -s arm2d.csolution.yml -m > required_packs.txt
+          test -s required_packs.txt && cpackget add -a -f required_packs.txt || echo "Nothing to install"
 
           pwd
           python build.py -c AC6 --optimize Release build
