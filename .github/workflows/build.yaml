@@ -71,7 +71,7 @@ jobs:
       - name: misc
 #          # cbuild get_started.csolution.yml --packs --update-rte --configuration .debug+AVH      
         run: |
-          ./tool-inventory.sh
+        
           . <(curl https://aka.ms/vcpkg-init.sh -L)
           vcpkg activate
 
