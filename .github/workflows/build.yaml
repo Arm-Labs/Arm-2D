@@ -70,18 +70,20 @@ jobs:
 
       - name: misc
 #          # cbuild get_started.csolution.yml --packs --update-rte --configuration .debug+AVH      
+        working-directory: ./test
         run: |
         
           . <(curl https://aka.ms/vcpkg-init.sh -L)
           vcpkg activate
 
+          cpackget add --agree-embedded-license https://github.com/GorgonMeducer/perf_counter/raw/main/cmsis-pack/GorgonMeducer.perf_counter.1.9.11.pack
 
           echo "cpackget : $(which cpackget)"
           echo "csolution: $(which csolution)"
           echo "cbuild   : $(which cbuild)"
-          echo "cbuild   : $(which armclang)"
 
-          env
+          pwd
+          python build.py -c AC6 --optimize Release build
 
       #- name: Perform CodeQL Analysis
       #  uses: github/codeql-action/analyze@v2
