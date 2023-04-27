@@ -11,7 +11,7 @@ from shutil import copy
 
 from zipfile import ZipFile
 
-from matrix_runner import main, matrix_axis, matrix_action, matrix_command
+from matrix_runner import main, matrix_axis, matrix_action, matrix_command, matrix_filter
 
 
 @matrix_axis("project", "p", "Project(s) to be considered.")
@@ -105,7 +105,7 @@ def build(config, results):
     if not all(r.success for r in results):
         return
 
-    file = f"blinky-{config_suffix(config)}.zip"
+    file = f"{project_dir(config)}-{datetime.now().strftime('%Y%m%d%H%M%S')}.zip"
     logging.info(f"Archiving build output to {file}...")
     with ZipFile(file, "w") as archive:
         for content in iglob(f"{project_dir(config)}/**/*", recursive=True):
@@ -116,7 +116,7 @@ def build(config, results):
 @matrix_action
 def extract(config):
     """Extract the latest build archive."""
-    archives = sorted(glob(f"EventStatistic-{config_suffix(config, timestamp=False)}-*.zip"), reverse=True)
+    archives = sorted(glob(f"{project_dir(config)}-*.zip"), reverse=True)
     yield unzip(archives[0])
 
 
@@ -153,6 +153,12 @@ def model_exec(config):
     cmdline += MODEL_EXECUTABLE[config.device][1]
     cmdline += ["-a", f"{project_outdir(config)}/{project_name(config)}.{config.compiler.image_ext}"]
     return cmdline
+
+
+@matrix_filter
+def filter_gcc_sse300(config):
+    return config.compiler == CompilerAxis.GCC and \
+         config.device == DeviceAxis.SSE300
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-name: Build documentation and pack
+name: Build demos, run on C300 VHT, build documentation and pack
 on:
   workflow_dispatch:
   push:
@@ -8,29 +8,79 @@ on:
   release:
     types: [published]
 jobs:
-  pack:
-    name: Generate pack
-    runs-on: ubuntu-20.04
+  # pack:
+  #   name: Generate pack
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: 0
+
+  #     - name: Fetch tags
+  #       if: ${{ github.event_name == 'release' }}
+  #       run: |
+  #         git fetch --tags --force
+
+  #     - uses: Open-CMSIS-Pack/gen-pack-action@main
+  #       with:
+  #         doxygen-version: 1.9.2
+  #         packchk-version: 1.3.96
+  #         gen-doc-script: ./documentation/gen_doc.sh
+  #         check-links-script: |
+  #           ./documentation/check_links.sh \
+  #             ./documentation/html/index.html \
+  #             ./documentation
+  #         doc-path: ./documentation/html
+  #         gen-pack-script: ./gen_pack.sh
+  #         gen-pack-output: ./output
+  #         gh-pages-branch: gh-pages
+
+  build:
+    name: Build and Run
+    runs-on: AVH-Runner
+
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      - name: Fetch tags
-        if: ${{ github.event_name == 'release' }}
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: Install Python requirements
         run: |
-          git fetch --tags --force
+          pip install -U -r test/requirements.txt
 
-      - uses: Open-CMSIS-Pack/gen-pack-action@main
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
         with:
-          doxygen-version: 1.9.2
-          packchk-version: 1.3.96
-          gen-doc-script: ./documentation/gen_doc.sh
-          check-links-script: |
-            ./documentation/check_links.sh \
-              ./documentation/html/index.html \
-              ./documentation
-          doc-path: ./documentation/html
-          gen-pack-script: ./gen_pack.sh
-          gen-pack-output: ./output
-          gh-pages-branch: gh-pages
+          languages: cpp
+          queries: security-and-quality
+
+      - name: test cmsis toolbox
+#          # cbuild get_started.csolution.yml --packs --update-rte --configuration .debug+AVH      
+        run: |
+          echo "cpackget : $(which cpackget)"
+          echo "csolution: $(which csolution)"
+          echo "cbuild   : $(which cbuild)"
+          echo "cbuild   : $(which armclang)"
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+
+      #- name: Run the example
+      #  run: |
+      #     echo "${{env.AVH_PATH}}" >> $GITHUB_PATH
+      #     /opt/VHT/VHT_MPS2_Cortex-M3  -f ./vht-config.txt -a ./hello/out/hello/debug/AVH/debug+AVH.axf --stat $*
+
+      # - name: Archive results
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: results
+      #     path: |
+      #       test/arm2d_*.zip
+      #     retention-days: 1
+      #     if-no-files-found: error
+      #   if: always()
