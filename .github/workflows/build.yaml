@@ -82,8 +82,12 @@ jobs:
           echo "csolution: $(which csolution)"
           echo "cbuild   : $(which cbuild)"
 
-          cpackget update-index
+          echo "update index"
+          cpackget update-index -v
+          
+          echo "add perf counter"          
           cpackget add --agree-embedded-license https://github.com/GorgonMeducer/perf_counter/raw/main/cmsis-pack/GorgonMeducer.perf_counter.1.9.10.pack
+
 
           csolution list packs -s arm2d.csolution.yml -m > required_packs.txt
           test -s required_packs.txt && cpackget add -a -f required_packs.txt || echo "Nothing to install"
