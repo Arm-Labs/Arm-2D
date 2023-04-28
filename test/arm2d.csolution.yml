@@ -1,4 +1,26 @@
 solution:
+  compiler: AC6
+  misc:
+    - C-CPP:
+        - -ffast-math
+      C:
+        - -std=gnu11
+        - -fshort-enums
+        - -fshort-wchar
+      CPP:
+        - -std=c++11
+        - -fno-rtti
+      ASM:
+        - -masm=auto
+      Link:
+        - --entry=Reset_Handler
+        - --info=summarysizes
+        - --info=sizes
+        - --info=totals
+        - --info=unused
+        - --info=veneers
+
+
   packs:
     - pack: ARM::Arm-2D
       path: ../
