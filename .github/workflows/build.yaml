@@ -67,7 +67,7 @@ jobs:
           languages: cpp
           queries: security-and-quality
 
-      - name: Install Build tools with ARM Gnu toolchain and packs install
+      - name: Install Build tools with ARM Gnu toolchain,  packs install and start builds
         working-directory: ./test
         run: |
         
@@ -129,10 +129,6 @@ jobs:
           csolution list packs -s arm2d.csolution.yml -m > required_packs.txt
           test -s required_packs.txt && cpackget add -a -f required_packs.txt || echo "Nothing to install"
 
-
-      - name: Build Arm2D apps
-        working-directory: ./test
-        run: |
 
           pwd
           echo python build.py -c AC6 --optimize Release build
