@@ -115,6 +115,7 @@ jobs:
           echo "cpackget : $(which cpackget)"
           echo "csolution: $(which csolution)"
           echo "cbuild   : $(which cbuild)"
+          echo "codeql   : $(which codeql)"
 
           cpackget init https://www.keil.com/pack/index.pidx
           
@@ -135,7 +136,7 @@ jobs:
           echo cbuild ./arm2d_generic.Debug+VHT-Corstone-300-AC6/arm2d_generic.Debug+VHT-Corstone-300.cprj -v
           echo skip cbuild arm2d.csolution.yml --packs --update-rte --configuration .Debug+VHT-Corstone-300
 
-          echo python build.py -c AC6 --optimize Release build
+          python build.py -c AC6 --optimize Release build
 
           echo jump over Corstone_SSE-300, not supported by GCC
           python build.py -c GCC --optimize Release  --device Cortex-M7 build
