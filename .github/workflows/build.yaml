@@ -92,8 +92,9 @@ jobs:
 
           pwd
           echo python build.py -c AC6 --optimize Release build
-          csolution convert -s arm2d.csolution.yml
-          cbuild ./arm2d_generic.Debug+VHT-Corstone-300-AC6/arm2d_generic.Debug+VHT-Corstone-300.cprj -v
+          echo csolution convert -s arm2d.csolution.yml
+          echo cbuild ./arm2d_generic.Debug+VHT-Corstone-300-AC6/arm2d_generic.Debug+VHT-Corstone-300.cprj -v
+          cbuild arm2d.csolution.yml --packs --update-rte --configuration .Debug+VHT-Corstone-300
 
       #- name: Perform CodeQL Analysis
       #  uses: github/codeql-action/analyze@v2
