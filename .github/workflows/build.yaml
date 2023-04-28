@@ -91,7 +91,9 @@ jobs:
           test -s required_packs.txt && cpackget add -a -f required_packs.txt || echo "Nothing to install"
 
           pwd
-          python build.py -c AC6 --optimize Release build
+          echo python build.py -c AC6 --optimize Release build
+          csolution convert -s arm2d.csolution.yml
+          cbuild ./arm2d_generic.Debug+VHT-Corstone-300-AC6/arm2d_generic.Debug+VHT-Corstone-300.cprj -v
 
       #- name: Perform CodeQL Analysis
       #  uses: github/codeql-action/analyze@v2
