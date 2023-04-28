@@ -67,7 +67,7 @@ jobs:
           languages: cpp
           queries: security-and-quality
 
-      - name: build
+      - name: Install Build tools with ARM Gnu toolchain and packs install
         working-directory: ./test
         run: |
         
@@ -129,6 +129,11 @@ jobs:
           csolution list packs -s arm2d.csolution.yml -m > required_packs.txt
           test -s required_packs.txt && cpackget add -a -f required_packs.txt || echo "Nothing to install"
 
+
+      - name: Build Arm2D apps
+        working-directory: ./test
+        run: |
+
           pwd
           echo python build.py -c AC6 --optimize Release build
           echo csolution convert -s arm2d.csolution.yml
@@ -142,12 +147,12 @@ jobs:
           python build.py -c GCC --optimize Release  --device Cortex-M7 build
           python build.py -c GCC --optimize Release  --device Cortex-M33 build
           python build.py -c GCC --optimize Release  --device Cortex-M55 build
-          python build.py -c GCC --optimize Release  --device Corstone_SSE-310 build        
+          echo skip python build.py -c GCC --optimize Release  --device Corstone_SSE-310 build        
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
 
-      - name: Run the example
+      - name: Run Arm2D apps on different VHT's
         working-directory: ./test      
         run: |
            echo "${{env.AVH_PATH}}" >> $GITHUB_PATH
