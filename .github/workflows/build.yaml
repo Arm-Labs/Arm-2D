@@ -101,15 +101,15 @@ jobs:
 
 
           wget https://developer.arm.com/-/media/Files/downloads/gnu/12.2.mpacbti-rel1/binrel/arm-gnu-toolchain-12.2.mpacbti-rel1-x86_64-arm-none-eabi.tar.xz
-          tar -xvf arm-gnu-toolchain-12.2.mpacbti-rel1-x86_64-arm-none-eabi.tar.xz
+          tar -xf arm-gnu-toolchain-12.2.mpacbti-rel1-x86_64-arm-none-eabi.tar.xz
           echo copy GCC cmake
           cp cmsis-toolbox-linux-amd64/etc/GCC.10.3.1.cmake cmsis-toolbox-linux-amd64/etc/GCC.12.2.1.cmake  
           GNUTOOLSPATH=$TOP/arm-gnu-toolchain-12.2.mpacbti-rel1-x86_64-arm-none-eabi/bin
           ls $GNUTOOLSPATH
           sed -i -e "/^set(TOOLCHAIN_ROOT.*/c\set(TOOLCHAIN_ROOT "${GNUTOOLSPATH}")" cmsis-toolbox-linux-amd64/etc/GCC.12.2.1.cmake 
-          sed -i -e '/^set(TOOLCHAIN_VERSION.*/c\set(TOOLCHAIN_VERSION "12.2.1")'' cmsis-toolbox-linux-amd64/etc/GCC.12.2.1.cmake 
+          sed -i -e '/^set(TOOLCHAIN_VERSION.*/c\set(TOOLCHAIN_VERSION "12.2.1")' cmsis-toolbox-linux-amd64/etc/GCC.12.2.1.cmake 
 
-          $TOP/arm-gnu-toolchain-12.2.mpacbti-rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-gcc -v
+          $GNUTOOLSPATH/arm-none-eabi-gcc -v
           popd
 
           echo "cpackget : $(which cpackget)"
