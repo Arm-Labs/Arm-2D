@@ -61,11 +61,11 @@ jobs:
         run: |
           pip install -U -r test/requirements.txt
 
-      # - name: Initialize CodeQL
-      #   uses: github/codeql-action/init@v2
-      #   with:
-      #     languages: cpp
-      #     queries: security-and-quality
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: cpp
+          queries: security-and-quality
 
       - name: build
 #          # cbuild get_started.csolution.yml --packs --update-rte --configuration .debug+AVH      
@@ -125,16 +125,42 @@ jobs:
 
           python build.py -c AC6 --optimize Release build
 
-      #- name: Perform CodeQL Analysis
-      #  uses: github/codeql-action/analyze@v2
+          echo jump over Corstone_SSE-300, not supported by GCC
+          python build.py -c GCC --optimize Release  --device Cortex-M7 build
+          python build.py -c GCC --optimize Release  --device Cortex-M33 build
+          python build.py -c GCC --optimize Release  --device Cortex-M55 build
+          python build.py -c GCC --optimize Release  --device Corstone_SSE-310 build          
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
 
       - name: Run the example
         working-directory: ./test      
         run: |
            echo "${{env.AVH_PATH}}" >> $GITHUB_PATH
 
+           echo run CS300  
            /opt/VHT/VHT_Corstone_SSE-300_Ethos-U55   ./arm2d_generic.Release+VHT-Corstone-300-AC6/outdir/Release+VHT-Corstone-300.axf  -f model_config_sse300.txt --stat $*
+           
            /opt/VHT/VHT_Corstone_SSE-300_Ethos-U55   ./arm2d_smartwatch.Release+VHT-Corstone-300-AC6/outdir/Release+VHT-Corstone-300.axf -f model_config_sse300.txt --stat $*
+
+           echo run M7 code
+           /opt/VHT/HT_MPS2_Cortex-M7 \
+              ./arm2d_smartwatch.Release+VHT_M7-AC6/outdir/arm2d_smartwatch.Release+VHT_M7.axf \
+              -f model_config_cm7.txt
+                  
+           /opt/VHT/VHT_MPS2_Cortex-M7 \
+              ./arm2d_generic.Release+VHT_M7-AC6/outdir/arm2d_generic.Release+VHT_M7.axf \
+              -f model_config_cm7.txt
+
+           /opt/VHT/VHT_MPS2_Cortex-M7 \
+              ./arm2d_smartwatch.Release+VHT_M7-GCC/outdir/arm2d_smartwatch.Release+VHT_M7.elf \
+              -f model_config_cm7.txt
+
+           /opt/VHT/VHT_MPS2_Cortex-M7 \
+              ./arm2d_generic.Release+VHT_M7-GCC/outdir/arm2d_generic.Release+VHT_M7.elf \
+              -f model_config_cm7.txt
+
 
       # - name: Archive results
       #   uses: actions/upload-artifact@v3
