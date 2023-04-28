@@ -67,7 +67,7 @@ jobs:
       #     languages: cpp
       #     queries: security-and-quality
 
-      - name: misc
+      - name: build
 #          # cbuild get_started.csolution.yml --packs --update-rte --configuration .debug+AVH      
         working-directory: ./test
         run: |
@@ -129,6 +129,7 @@ jobs:
       #  uses: github/codeql-action/analyze@v2
 
       - name: Run the example
+        working-directory: ./test      
         run: |
            echo "${{env.AVH_PATH}}" >> $GITHUB_PATH
 
