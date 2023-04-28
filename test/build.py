@@ -22,6 +22,7 @@ class ProjectAxis(Enum):
 
 @matrix_axis("device", "d", "Device(s) to be considered.")
 class DeviceAxis(Enum):
+    CM0P   = ('Cortex-M0plus','CM0P', 'VHT_M0Plus')    
     CM7    = ('Cortex-M7',  'CM7', 'VHT_M7')
     CM33   = ('Cortex-M33', 'CM33', 'VHT_M33')
     CM55   = ('Cortex-M55', 'CM55', 'VHT_M55')
@@ -52,6 +53,7 @@ class OptimizeAxis(Enum):
 
 
 MODEL_EXECUTABLE = {
+    DeviceAxis.CM0P: ("VHT_MPS2_Cortex-M0plus", []),
     DeviceAxis.CM7: ("VHT_MPS2_Cortex-M7", []),
     DeviceAxis.CM33: ("VHT_MPS2_Cortex-M33", []),
     DeviceAxis.CM55: ("VHT_MPS2_Cortex-M55", []),

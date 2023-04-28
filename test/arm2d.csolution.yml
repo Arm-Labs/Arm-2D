@@ -51,6 +51,12 @@ solution:
         - CORTEXM
         - ITERATION_CNT=100
 
+    - type: VHT_M0Plus
+      device: ARMCM0P
+      define:
+        - CORTEXM
+        - ITERATION_CNT=100
+
   build-types:
     - type: Debug
       optimize: none

@@ -68,7 +68,6 @@ jobs:
           queries: security-and-quality
 
       - name: build
-#          # cbuild get_started.csolution.yml --packs --update-rte --configuration .debug+AVH      
         working-directory: ./test
         run: |
         
@@ -136,13 +135,14 @@ jobs:
           echo cbuild ./arm2d_generic.Debug+VHT-Corstone-300-AC6/arm2d_generic.Debug+VHT-Corstone-300.cprj -v
           echo skip cbuild arm2d.csolution.yml --packs --update-rte --configuration .Debug+VHT-Corstone-300
 
-          python build.py -c AC6 --optimize Release --device Cortex-M7 build
+          python build.py -c AC6 --optimize Release build
 
           echo jump over Corstone_SSE-300, not supported by GCC
+          python build.py -c GCC --optimize Release  --device Cortex-M0plus build
           python build.py -c GCC --optimize Release  --device Cortex-M7 build
-          echo python build.py -c GCC --optimize Release  --device Cortex-M33 build
-          echo python build.py -c GCC --optimize Release  --device Cortex-M55 build
-          echo python build.py -c GCC --optimize Release  --device Corstone_SSE-310 build          
+          python build.py -c GCC --optimize Release  --device Cortex-M33 build
+          python build.py -c GCC --optimize Release  --device Cortex-M55 build
+          python build.py -c GCC --optimize Release  --device Corstone_SSE-310 build        
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
@@ -153,26 +153,23 @@ jobs:
            echo "${{env.AVH_PATH}}" >> $GITHUB_PATH
 
            echo run CS300  
-           echo /opt/VHT/VHT_Corstone_SSE-300_Ethos-U55   ./arm2d_generic.Release+VHT-Corstone-300-AC6/outdir/Release+VHT-Corstone-300.axf  -f model_config_sse300.txt --stat $*
-           
-           echo /opt/VHT/VHT_Corstone_SSE-300_Ethos-U55   ./arm2d_smartwatch.Release+VHT-Corstone-300-AC6/outdir/Release+VHT-Corstone-300.axf -f model_config_sse300.txt --stat $*
+           /opt/VHT/VHT_Corstone_SSE-300_Ethos-U55   ./arm2d_generic.Release+VHT-Corstone-300-AC6/outdir/Release+VHT-Corstone-300.axf  -f model_config_sse300.txt --stat $*
+           /opt/VHT/VHT_Corstone_SSE-300_Ethos-U55   ./arm2d_smartwatch.Release+VHT-Corstone-300-AC6/outdir/Release+VHT-Corstone-300.axf -f model_config_sse300.txt --stat $*
 
-           echo run M7 code
-           /opt/VHT/VHT_MPS2_Cortex-M7 \
-              ./arm2d_smartwatch.Release+VHT_M7-AC6/outdir/Release+VHT_M7.axf \
-              -f model_config_cm7.txt
-                  
-           /opt/VHT/VHT_MPS2_Cortex-M7 \
-              ./arm2d_generic.Release+VHT_M7-AC6/outdir/Release+VHT_M7.axf \
-              -f model_config_cm7.txt
+           echo run CM0plus
+           /opt/VHT/VHT_MPS2_Cortex-M0plus  ./arm2d_generic.Release+VHT_M0Plus-AC6/outdir/Release+VHT_M0Plus.axf -f model_config_cm0plus.txt --stat $*
+           /opt/VHT/VHT_MPS2_Cortex-M0plus  ./arm2d_smartwatch.Release+VHT_M0Plus-AC6/outdir/Release+VHT_M0Plus.axf -f model_config_cm0plus.txt --stat $*
 
-           /opt/VHT/VHT_MPS2_Cortex-M7 \
-              ./arm2d_smartwatch.Release+VHT_M7-GCC/outdir/Release+VHT_M7.elf \
-              -f model_config_cm7.txt
+           /opt/VHT/VHT_MPS2_Cortex-M0plus  ./arm2d_generic.Release+VHT_M0Plus-GCC/outdir/Release+VHT_M0Plus.elf -f model_config_cm0plus.txt --stat $*
+           /opt/VHT/VHT_MPS2_Cortex-M0plus  ./arm2d_smartwatch.Release+VHT_M0Plus-GCC/outdir/Release+VHT_M0Plus.elf -f model_config_cm0plus.txt --stat $*
 
-           /opt/VHT/VHT_MPS2_Cortex-M7 \
-              ./arm2d_generic.Release+VHT_M7-GCC/outdir/Release+VHT_M7.elf \
-              -f model_config_cm7.txt
+
+           echo run CM7
+           /opt/VHT/VHT_MPS2_Cortex-M7   ./arm2d_smartwatch.Release+VHT_M7-AC6/outdir/Release+VHT_M7.axf -f model_config_cm7.txt --stat $*
+           /opt/VHT/VHT_MPS2_Cortex-M7   ./arm2d_generic.Release+VHT_M7-AC6/outdir/Release+VHT_M7.axf -f model_config_cm7.txt --stat $*
+
+           /opt/VHT/VHT_MPS2_Cortex-M7   ./arm2d_smartwatch.Release+VHT_M7-GCC/outdir/Release+VHT_M7.elf -f model_config_cm7.txt --stat $*
+           /opt/VHT/VHT_MPS2_Cortex-M7   ./arm2d_generic.Release+VHT_M7-GCC/outdir/Release+VHT_M7.elf -f model_config_cm7.txt --stat $*
 
 
       # - name: Archive results

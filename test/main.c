@@ -53,7 +53,11 @@ void SysTick_Handler(void)
 #define PRELOAD_DC(add,sz)
 #endif
 
+#ifndef __ARM_ARCH_6M__
 #define dbgInst(imm) __asm volatile("DBG %0\n\t" : :"Ir" ((imm)) )
+#else
+#define dbgInst(imm) 
+#endif
 
 #define CM_DWT_CYCCNTENA_BIT   (1UL<<0)
 #define CM_TRCENA_BIT          (1UL<<24)
