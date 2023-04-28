@@ -121,15 +121,19 @@ jobs:
           echo python build.py -c AC6 --optimize Release build
           echo csolution convert -s arm2d.csolution.yml
           echo cbuild ./arm2d_generic.Debug+VHT-Corstone-300-AC6/arm2d_generic.Debug+VHT-Corstone-300.cprj -v
-          cbuild arm2d.csolution.yml --packs --update-rte --configuration .Debug+VHT-Corstone-300
+          echo skip cbuild arm2d.csolution.yml --packs --update-rte --configuration .Debug+VHT-Corstone-300
+
+          python build.py -c AC6 --optimize Release build
 
       #- name: Perform CodeQL Analysis
       #  uses: github/codeql-action/analyze@v2
 
-      #- name: Run the example
-      #  run: |
-      #     echo "${{env.AVH_PATH}}" >> $GITHUB_PATH
-      #     /opt/VHT/VHT_MPS2_Cortex-M3  -f ./vht-config.txt -a ./hello/out/hello/debug/AVH/debug+AVH.axf --stat $*
+      - name: Run the example
+        run: |
+           echo "${{env.AVH_PATH}}" >> $GITHUB_PATH
+
+           /opt/VHT/VHT_Corstone_SSE-300_Ethos-U55   ./arm2d_generic.Release+VHT-Corstone-300-AC6/outdir/Release+VHT-Corstone-300.axf  -f model_config_sse300.txt --stat $*
+           /opt/VHT/VHT_Corstone_SSE-300_Ethos-U55   ./arm2d_smartwatch.Release+VHT-Corstone-300-AC6/outdir/Release+VHT-Corstone-300.axf -f model_config_sse300.txt --stat $*
 
       # - name: Archive results
       #   uses: actions/upload-artifact@v3
