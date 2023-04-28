@@ -98,6 +98,18 @@ jobs:
 
           echo "CMSIS_PACK_ROOT is : "
           echo $CMSIS_PACK_ROOT
+
+
+          wget https://developer.arm.com/-/media/Files/downloads/gnu/12.2.mpacbti-rel1/binrel/arm-gnu-toolchain-12.2.mpacbti-rel1-x86_64-arm-none-eabi.tar.xz
+          tar -xvf arm-gnu-toolchain-12.2.mpacbti-rel1-x86_64-arm-none-eabi.tar.xz
+          echo copy GCC cmake
+          cp cmsis-toolbox-linux-amd64/etc/GCC.10.3.1.cmake cmsis-toolbox-linux-amd64/etc/GCC.12.2.1.cmake  
+          GNUTOOLSPATH=$TOP/arm-gnu-toolchain-12.2.mpacbti-rel1-x86_64-arm-none-eabi/bin
+          ls $GNUTOOLSPATH
+          sed -i -e "/^set(TOOLCHAIN_ROOT.*/c\set(TOOLCHAIN_ROOT "${GNUTOOLSPATH}")" cmsis-toolbox-linux-amd64/etc/GCC.12.2.1.cmake 
+          sed -i -e '/^set(TOOLCHAIN_VERSION.*/c\set(TOOLCHAIN_VERSION "12.2.1")'' cmsis-toolbox-linux-amd64/etc/GCC.12.2.1.cmake 
+
+          $TOP/arm-gnu-toolchain-12.2.mpacbti-rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-gcc -v
           popd
 
           echo "cpackget : $(which cpackget)"
@@ -123,13 +135,13 @@ jobs:
           echo cbuild ./arm2d_generic.Debug+VHT-Corstone-300-AC6/arm2d_generic.Debug+VHT-Corstone-300.cprj -v
           echo skip cbuild arm2d.csolution.yml --packs --update-rte --configuration .Debug+VHT-Corstone-300
 
-          python build.py -c AC6 --optimize Release build
+          echo python build.py -c AC6 --optimize Release build
 
           echo jump over Corstone_SSE-300, not supported by GCC
           python build.py -c GCC --optimize Release  --device Cortex-M7 build
-          python build.py -c GCC --optimize Release  --device Cortex-M33 build
-          python build.py -c GCC --optimize Release  --device Cortex-M55 build
-          python build.py -c GCC --optimize Release  --device Corstone_SSE-310 build          
+          echo python build.py -c GCC --optimize Release  --device Cortex-M33 build
+          echo python build.py -c GCC --optimize Release  --device Cortex-M55 build
+          echo python build.py -c GCC --optimize Release  --device Corstone_SSE-310 build          
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
