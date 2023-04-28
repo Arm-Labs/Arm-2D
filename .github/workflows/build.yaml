@@ -17,40 +17,39 @@ env:
   AVH_PATH: /opt/VHT
 
 jobs:
-  # pack:
-  #   name: Generate pack
-  #   runs-on: ubuntu-20.04
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #       with:
-  #         fetch-depth: 0
+  pack:
+    name: Generate pack
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-  #     - name: Fetch tags
-  #       if: ${{ github.event_name == 'release' }}
-  #       run: |
-  #         git fetch --tags --force
+      - name: Fetch tags
+        if: ${{ github.event_name == 'release' }}
+        run: |
+          git fetch --tags --force
 
-  #     - uses: Open-CMSIS-Pack/gen-pack-action@main
-  #       with:
-  #         doxygen-version: 1.9.2
-  #         packchk-version: 1.3.96
-  #         gen-doc-script: ./documentation/gen_doc.sh
-  #         check-links-script: |
-  #           ./documentation/check_links.sh \
-  #             ./documentation/html/index.html \
-  #             ./documentation
-  #         doc-path: ./documentation/html
-  #         gen-pack-script: ./gen_pack.sh
-  #         gen-pack-output: ./output
-  #         gh-pages-branch: gh-pages
+      - uses: Open-CMSIS-Pack/gen-pack-action@main
+        with:
+          doxygen-version: 1.9.2
+          packchk-version: 1.3.96
+          gen-doc-script: ./documentation/gen_doc.sh
+          check-links-script: |
+            ./documentation/check_links.sh \
+              ./documentation/html/index.html \
+              ./documentation
+          doc-path: ./documentation/html
+          gen-pack-script: ./gen_pack.sh
+          gen-pack-output: ./output
+          gh-pages-branch: gh-pages
 
   build:
     name: Build and Run
     runs-on: AVH-Runner
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+#      - name: Checkout
+#        uses: actions/checkout@v3
 
       - name: Set up Python 3.10
         uses: actions/setup-python@v4
@@ -84,7 +83,9 @@ jobs:
 
           echo skip cpackget update-index 
           
-          cpackget add --agree-embedded-license https://github.com/GorgonMeducer/perf_counter/raw/main/cmsis-pack/GorgonMeducer.perf_counter.1.9.10.pack
+          echo cpackget add --agree-embedded-license https://github.com/GorgonMeducer/perf_counter/raw/main/cmsis-pack/GorgonMeducer.perf_counter.1.9.10.pack
+
+          cpackget add --agree-embedded-license  https://github.com/GorgonMeducer/perf_counter/raw/659eb12026977d81391d90290706f9ac3c8efe7e/cmsis-pack/GorgonMeducer.perf_counter.1.9.11.pack
 
           csolution list packs -s arm2d.csolution.yml -m > required_packs.txt
           test -s required_packs.txt && cpackget add -a -f required_packs.txt || echo "Nothing to install"

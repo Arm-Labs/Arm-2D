@@ -14,7 +14,7 @@ project:
     - component: ARM::Acceleration:Arm-2D:Alpha-Blending
     - component: ARM::Acceleration:Arm-2D:Transform
     - component: ARM::Acceleration:Arm-2D Helper:PFB
-    - component: ARM::Acceleration:Arm-2D Extras:Benchmark:WatchPanel
+    - component: ARM::Acceleration:Arm-2D Extras:Benchmark-WatchPanel
     - component: ARM::Acceleration:Arm-2D Extras:Controls
     - component: ARM::Acceleration:Arm-2D Extras:LCD ASCII Printf
 

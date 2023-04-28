@@ -8,7 +8,7 @@ solution:
     - pack: ARM::V2M_MPS3_SSE_310_BSP@1.1.0
     - pack: Keil::ARM_Compiler@1.7.2
     - pack: ARM::DMA350@1.0.0
-    - pack: GorgonMeducer::perf_counter@1.9.10
+    - pack: GorgonMeducer::perf_counter@1.9.11
 
   target-types:
     - type: VHT-Corstone-310
