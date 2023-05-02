@@ -156,10 +156,8 @@ jobs:
           export CMSIS_COMPILER_ROOT=$TOP/cmsis-toolbox-linux-amd64/etc/
           export CMSIS_PACK_ROOT=$TOP/cmsis-pack
           popd
-          
-          cp arm2d.gcc-cdefault.yml arm2d.cdefault.yml
-          csolution convert -s arm2d.csolution.yml
-          cbuild ./arm2d_smartwatch.Release+VHT_M7-GCC/arm2d_smartwatch.Release+VHT_M7.cprj
+
+          python build.py -c GCC --optimize Release  --device Cortex-M7 build -p generic
 
 
 
