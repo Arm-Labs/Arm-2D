@@ -123,19 +123,13 @@ jobs:
           test -s required_packs.txt && cpackget add -a -f required_packs.txt || echo "Nothing to install"
 
 
-          pwd
-          echo python build.py -c AC6 --optimize Release build
-          echo csolution convert -s arm2d.csolution.yml
-          echo cbuild ./arm2d_generic.Debug+VHT-Corstone-300-AC6/arm2d_generic.Debug+VHT-Corstone-300.cprj -v
-          echo skip cbuild arm2d.csolution.yml --packs --update-rte --configuration .Debug+VHT-Corstone-300
+          python build.py -c AC6 --optimize Release build
 
-          # python build.py -c AC6 --optimize Release build
-
-          # echo jump over Corstone_SSE-300, not supported by GCC
-          # python build.py -c GCC --optimize Release  --device Cortex-M0plus build
-          # python build.py -c GCC --optimize Release  --device Cortex-M7 build
-          # python build.py -c GCC --optimize Release  --device Cortex-M33 build
-          # python build.py -c GCC --optimize Release  --device Cortex-M55 build
+          echo jump over Corstone_SSE-300, not supported by GCC
+          python build.py -c GCC --optimize Release  --device Cortex-M0plus build
+          python build.py -c GCC --optimize Release  --device Cortex-M7 build
+          python build.py -c GCC --optimize Release  --device Cortex-M33 build
+          python build.py -c GCC --optimize Release  --device Cortex-M55 build
           # echo skip python build.py -c GCC --optimize Release  --device Corstone_SSE-310 build        
 
 
@@ -158,7 +152,6 @@ jobs:
           popd
 
           python build.py -c GCC --optimize Release  --device Cortex-M7 build -p generic
-
 
 
       - name: Perform CodeQL Analysis
@@ -190,12 +183,12 @@ jobs:
            /opt/VHT/VHT_MPS2_Cortex-M7   ./arm2d_generic.Release+VHT_M7-GCC/outdir/Release+VHT_M7.elf -f model_config_cm7.txt --stat $*
 
 
-      # - name: Archive results
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: results
-      #     path: |
-      #       test/arm2d_*.zip
-      #     retention-days: 1
-      #     if-no-files-found: error
-      #   if: always()
+      - name: Archive results
+        uses: actions/upload-artifact@v3
+        with:
+          name: results
+          path: |
+            test/arm2d_*.zip
+          retention-days: 1
+          if-no-files-found: error
+        if: always()
