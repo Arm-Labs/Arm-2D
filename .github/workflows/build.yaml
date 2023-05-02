@@ -129,14 +129,14 @@ jobs:
           echo cbuild ./arm2d_generic.Debug+VHT-Corstone-300-AC6/arm2d_generic.Debug+VHT-Corstone-300.cprj -v
           echo skip cbuild arm2d.csolution.yml --packs --update-rte --configuration .Debug+VHT-Corstone-300
 
-          python build.py -c AC6 --optimize Release build
+          # python build.py -c AC6 --optimize Release build
 
-          echo jump over Corstone_SSE-300, not supported by GCC
-          python build.py -c GCC --optimize Release  --device Cortex-M0plus build
-          python build.py -c GCC --optimize Release  --device Cortex-M7 build
-          python build.py -c GCC --optimize Release  --device Cortex-M33 build
-          python build.py -c GCC --optimize Release  --device Cortex-M55 build
-          echo skip python build.py -c GCC --optimize Release  --device Corstone_SSE-310 build        
+          # echo jump over Corstone_SSE-300, not supported by GCC
+          # python build.py -c GCC --optimize Release  --device Cortex-M0plus build
+          # python build.py -c GCC --optimize Release  --device Cortex-M7 build
+          # python build.py -c GCC --optimize Release  --device Cortex-M33 build
+          # python build.py -c GCC --optimize Release  --device Cortex-M55 build
+          # echo skip python build.py -c GCC --optimize Release  --device Corstone_SSE-310 build        
 
 
       - name: Initialize CodeQL
@@ -149,15 +149,16 @@ jobs:
         working-directory: ./test
         run: |
         
-          . <(curl https://aka.ms/vcpkg-init.sh -L)
-          vcpkg activate
-      
+          pushd ~/cmsis
           TOP=`pwd`
+          ls -l
           export PATH=$PATH:$TOP/cmsis-toolbox-linux-amd64/bin/
           export CMSIS_COMPILER_ROOT=$TOP/cmsis-toolbox-linux-amd64/etc/
           export CMSIS_PACK_ROOT=$TOP/cmsis-pack
 
           cbuild ./arm2d_smartwatch.Release+VHT_M7-GCC/arm2d_smartwatch.Release+VHT_M7.cprj
+
+          popd
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
