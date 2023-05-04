@@ -102,6 +102,9 @@ jobs:
           sed -i -e '/^set(TOOLCHAIN_VERSION.*/c\set(TOOLCHAIN_VERSION "12.2.1")' cmsis-toolbox-linux-amd64/etc/GCC.12.2.1.cmake 
 
           $GNUTOOLSPATH/arm-none-eabi-gcc -v
+
+          wget https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
+          chmod +x jq-linux64
           popd
 
           echo "cpackget : $(which cpackget)"
@@ -162,7 +165,7 @@ jobs:
       - name: Parse SARIF
         run: |
           ls -ltr sarif-results
-          jq '.runs[].results[].message.text' sarif-results/cpp.sarif | sort | uniq -c | sort -nr
+          ~/cmsis/jq-linux64 '.runs[].results[].message.text' sarif-results/cpp.sarif | sort | uniq -c | sort -nr
 
       - name: Run Arm2D apps on VHT's
         working-directory: ./test      
