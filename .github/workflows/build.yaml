@@ -156,7 +156,13 @@ jobs:
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
+        with:
+          output: sarif-results
 
+      - name: Parse SARIF
+        run: |
+          ls -ltr sarif-results
+          jq '.runs[].results[].message.text' sarif-results/cpp.sarif | sort | uniq -c | sort -nr
 
       - name: Run Arm2D apps on VHT's
         working-directory: ./test      
